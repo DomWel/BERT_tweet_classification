@@ -2,6 +2,9 @@ import tensorflow as tf
 import transformers
 transformers.logging.set_verbosity_error()
 
+# Source code is largely adapted from: 
+# https://keras.io/examples/nlp/semantic_similarity_with_bert/
+
 def getBERTModel(max_length):
     # Encoded token ids from BERT tokenizer.
     token_type_ids = tf.keras.layers.Input(shape=(max_length,), dtype=tf.int32, name="token_type_ids")
