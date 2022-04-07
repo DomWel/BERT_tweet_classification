@@ -8,7 +8,7 @@ import config
 model = keras.models.load_model(config.dirs["results_path"]+"/model")
 
 # Load CSV test data file
-test_df = pd.read_csv(config.dirs["test_csv_file"], nrows=100000)
+test_df = pd.read_csv(config.dirs["test_csv_file"])
 
 test_data = BertSemanticDataGenerator(
     test_df["text"].values.astype("str"),

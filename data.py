@@ -26,7 +26,7 @@ class BertSemanticDataGenerator(tf.keras.utils.Sequence):
         self.include_targets = include_targets
         self.num_classes = num_classes
 
-        # Load our BERT Tokenizer to encode the text.
+        # Load BERT Tokenizer to encode the text.
         # Has to be compatible with the pretrained BERT model in use!!!!!
         self.tokenizer = transformers.BertTokenizer.from_pretrained(
             "bert-base-german-cased", do_lower_case=True

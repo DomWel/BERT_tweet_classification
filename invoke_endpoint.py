@@ -60,7 +60,7 @@ def getPredictionFromEndpoint(tweet,
     tac = time.time()
     print("Total server response time: ", tac - tic)
 
-    # Step 4: Process the response data to numpy
+    # Step 4: Convert the response data to numpy
     response = response["Body"].read()
     response = json.loads(response)
     preds = response['outputs']
