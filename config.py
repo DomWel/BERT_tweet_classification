@@ -17,13 +17,24 @@ training_params = dict(
   multiprocessing = True, 
   loss = "categorical_crossentropy",
   optimizer = "adam",
-  metrics = ["acc", "sparse_categorical_accuracy"]
+  metrics = ["acc"]
 )
 
 eval_params = dict(
   loss = "categorical_crossentropy", # or: "binary_crossentropy"
-  metrics = ["acc", "sparse_categorical_accuracy"]
+  metrics = ["acc", "sparse_categorical_accuracy"], 
+  labels = ["Lauterbach", "Oezdemir", "Spahn"]
 )
+
+sagemaker_endpoint = dict(
+  service_name='sagemaker-runtime',
+  region_name='eu-west-1', 
+  EndpointName='XXXXXXX',
+  ContentType='application/json',
+  ACCESS_KEY = 'XXXXXXX',
+  SECRET_KEY = 'XXXXXXX'
+)
+
 
 dirs = dict(
   results_path = "/content/drive/MyDrive/BERT/tweet_class/results_test",

@@ -5,15 +5,14 @@ transformers.logging.set_verbosity_error()
 # Source code is largely adapted from: 
 # https://keras.io/examples/nlp/semantic_similarity_with_bert/
 
-def getBERTModel(max_length):
-    # Encoded token ids from BERT tokenizer.
+def getBERTModel(max_length=128, num_classes=3):
+    # Inout BERT model = output BERT tokenizer!
     token_type_ids = tf.keras.layers.Input(shape=(max_length,), dtype=tf.int32, name="token_type_ids")
     attention_masks = tf.keras.layers.Input(shape=(max_length,), dtype=tf.int32, name="attention_masks")
     input_ids = tf.keras.layers.Input(shape=(max_length,), dtype=tf.int32, name="input_ids")
 
-    # Loading pretrained BERT model.
     bert_model = transformers.TFBertModel.from_pretrained("bert-base-german-cased")
-    # Freeze the BERT model to reuse the pretrained features without modifying them.
+    # Freeze the BERT model variables
     bert_model.trainable = False
 
     bert_output = bert_model.bert(
@@ -30,7 +29,7 @@ def getBERTModel(max_length):
     max_pool = tf.keras.layers.GlobalMaxPooling1D()(bi_lstm)
     concat = tf.keras.layers.concatenate([avg_pool, max_pool])
     dropout = tf.keras.layers.Dropout(0.3)(concat)
-    output = tf.keras.layers.Dense(3, activation="softmax")(dropout)
+    output = tf.keras.layers.Dense(num_classes, activation="softmax")(dropout)
     model = tf.keras.models.Model(
         inputs=[input_ids, attention_masks, token_type_ids], outputs=output
     )

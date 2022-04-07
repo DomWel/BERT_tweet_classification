@@ -8,14 +8,16 @@ from data import BertSemanticDataGenerator
 import keras
 
 # Load CSV data using panda
-train_df = pd.read_csv(config.dirs["training_csv_file"], nrows=100000)
-test_df = pd.read_csv(config.dirs["validation_csv_file"], nrows=100000)
-valid_df = pd.read_csv(config.dirs["test_csv_file"], nrows=100000)
+train_df = pd.read_csv(config.dirs["training_csv_file"])
+test_df = pd.read_csv(config.dirs["validation_csv_file"])
+valid_df = pd.read_csv(config.dirs["test_csv_file"])
 
 # Check data size
 print(f"Total train samples : {train_df.shape[0]}")
 print(f"Total validation samples: {valid_df.shape[0]}")
 print(f"Total test samples: {valid_df.shape[0]}")
+
+train_df.dropna(axis=0, inplace=True)
 
 train_df = (
     train_df[train_df.label != "-"]
@@ -48,7 +50,9 @@ valid_data = BertSemanticDataGenerator(
 )
 
 # Create model
-model = getBERTModel(config.dl_eval_params['max_length'])
+model = getBERTModel(max_length=config.dl_eval_params['max_length'], 
+    num_classes=config.dl_train_params['n_classes']
+)
 print(model.summary())
 
 # Step 1: Training with BERT variables freezed
@@ -79,10 +83,6 @@ model.fit(
     use_multiprocessing=config.training_params['multiprocessing'],
     workers=-1,
 )
-
-#tf.keras.models.save_model(model, "/content/drive/MyDrive/BERT/tweet_class/model_3000/model_3000")
-
-#model = keras.models.load_model("/content/drive/MyDrive/BERT/tweet_class/model_3000/model_3000")
 
 # Save model in protobuff format
 print("Saving BERT model to "+ config.dirs['results_path']+"/model")

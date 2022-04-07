@@ -8,21 +8,6 @@ transformers.logging.set_verbosity_error()
 # Source code is largely adapted from: 
 # https://keras.io/examples/nlp/semantic_similarity_with_bert/
 class BertSemanticDataGenerator(tf.keras.utils.Sequence):
-    """Generates batches of data.
-
-    Args:
-        sentence_pairs: Array of premise and hypothesis input sentences.
-        labels: Array of labels.
-        batch_size: Integer batch size.
-        shuffle: boolean, whether to shuffle the data.
-        include_targets: boolean, whether to incude the labels.
-
-    Returns:
-        Tuples `([input_ids, attention_mask, `token_type_ids], labels)`
-        (or just `[input_ids, attention_mask, `token_type_ids]`
-         if `include_targets=False`)
-    """
-
     def __init__(
         self,
         sentence_pairs,
@@ -40,8 +25,9 @@ class BertSemanticDataGenerator(tf.keras.utils.Sequence):
         self.max_length = max_length
         self.include_targets = include_targets
         self.num_classes = num_classes
+
         # Load our BERT Tokenizer to encode the text.
-        # We will use base-base-uncased pretrained model.
+        # Has to be compatible with the pretrained BERT model in use!!!!!
         self.tokenizer = transformers.BertTokenizer.from_pretrained(
             "bert-base-german-cased", do_lower_case=True
         )
@@ -49,16 +35,12 @@ class BertSemanticDataGenerator(tf.keras.utils.Sequence):
         self.on_epoch_end()
 
     def __len__(self):
-        # Denotes the number of batches per epoch.
         return len(self.sentence_pairs) // self.batch_size
 
     def __getitem__(self, idx):
-        # Retrieves the batch of index.
         indexes = self.indexes[idx * self.batch_size : (idx + 1) * self.batch_size]
         sentence_pairs = self.sentence_pairs[indexes]
 
-        # With BERT tokenizer's batch_encode_plus batch of both the sentences are
-        # encoded together and separated by [SEP] token.
         encoded = self.tokenizer.batch_encode_plus(
             sentence_pairs.tolist(),
             add_special_tokens=True,
@@ -69,12 +51,10 @@ class BertSemanticDataGenerator(tf.keras.utils.Sequence):
             return_tensors="tf",
         )
 
-        # Convert batch of encoded features to numpy array.
         input_ids = np.array(encoded["input_ids"], dtype="int32")
         attention_masks = np.array(encoded["attention_mask"], dtype="int32")
         token_type_ids = np.array(encoded["token_type_ids"], dtype="int32")
 
-        # Set to true if data generator is used for training/validation.
         if self.include_targets:
             label = tf.keras.utils.to_categorical(self.labels[indexes], num_classes=self.num_classes)
             labels = np.array(label, dtype="int32")
@@ -83,6 +63,5 @@ class BertSemanticDataGenerator(tf.keras.utils.Sequence):
             return [input_ids, attention_masks, token_type_ids]
 
     def on_epoch_end(self):
-        # Shuffle indexes after each epoch if shuffle is set to True.
         if self.shuffle:
             np.random.RandomState(42).shuffle(self.indexes)
