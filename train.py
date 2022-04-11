@@ -37,7 +37,8 @@ train_data = BertSemanticDataGenerator(
     batch_size=config.dl_train_params['batch_size'],
     shuffle=config.dl_train_params['shuffle'],
     max_length=config.dl_train_params['max_length'],
-    num_classes=config.dl_train_params['n_classes']
+    num_classes=config.dl_train_params['n_classes'],
+    transformers_model_name = config.training_params['transformers_model_name']
 )
 
 valid_data = BertSemanticDataGenerator(
@@ -46,12 +47,14 @@ valid_data = BertSemanticDataGenerator(
     batch_size=config.dl_eval_params['batch_size'],
     shuffle=config.dl_eval_params['shuffle'],
     max_length=config.dl_eval_params['max_length'],
-    num_classes=config.dl_eval_params['n_classes']
+    num_classes=config.dl_eval_params['n_classes'],
+    transformers_model_name = config.eval_params['transformers_model_name']
 )
 
 # Create model
 model = getBERTModel(max_length=config.dl_eval_params['max_length'], 
-    num_classes=config.dl_train_params['n_classes']
+    num_classes=config.dl_train_params['n_classes'],
+    transformers_model_name = config.training_params['transformers_model_name']
 )
 print(model.summary())
 

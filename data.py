@@ -16,7 +16,8 @@ class BertSemanticDataGenerator(tf.keras.utils.Sequence):
         shuffle=True,
         include_targets=True,
         max_length = 128,
-        num_classes  = 3
+        num_classes  = 3,
+        transformers_model_name = "bert-base-german-cased"
     ):
         self.sentence_pairs = sentence_pairs
         self.labels = labels
@@ -25,11 +26,11 @@ class BertSemanticDataGenerator(tf.keras.utils.Sequence):
         self.max_length = max_length
         self.include_targets = include_targets
         self.num_classes = num_classes
-
+        self.transformers_model_name = transformers_model_name
         # Load BERT Tokenizer to encode the text.
         # Has to be compatible with the pretrained BERT model in use!!!!!
         self.tokenizer = transformers.BertTokenizer.from_pretrained(
-            "bert-base-german-cased", do_lower_case=True
+            self.transformers_model_name, do_lower_case=True
         )
         self.indexes = np.arange(len(self.sentence_pairs))
         self.on_epoch_end()

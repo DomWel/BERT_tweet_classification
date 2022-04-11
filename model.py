@@ -5,7 +5,11 @@ transformers.logging.set_verbosity_error()
 # Source code is largely adapted from: 
 # https://keras.io/examples/nlp/semantic_similarity_with_bert/
 
-def getBERTModel(max_length=128, num_classes=3):
+def getBERTModel(
+    max_length=128, 
+    num_classes=3, 
+    transformers_model_name="bert-base-german-cased"
+    ):
     # Inout BERT model = output BERT tokenizer!
     token_type_ids = tf.keras.layers.Input(shape=(max_length,), dtype=tf.int32, name="token_type_ids")
     attention_masks = tf.keras.layers.Input(shape=(max_length,), dtype=tf.int32, name="attention_masks")

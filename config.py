@@ -7,23 +7,25 @@ dl_train_params = dict(
 
 dl_eval_params = dict(
     max_length  = 128,
-    batch_size = 32,
+    batch_size = 1,
     n_classes = 3, 
     shuffle = False
 )
 
 training_params = dict(
-  epochs = 3, # In total: 2x epochs 
+  epochs = 10, # In total: 2x epochs 
   multiprocessing = True, 
   loss = "categorical_crossentropy",
   optimizer = "adam",
-  metrics = ["acc"]
+  metrics = ["acc"], 
+  transformers_model_name="bert-base-german-cased"
 )
 
 eval_params = dict(
   loss = "categorical_crossentropy", # or: "binary_crossentropy"
   metrics = ["acc", "sparse_categorical_accuracy"], 
-  labels = ["Lauterbach", "Oezdemir", "Spahn"]
+  labels = ["Lauterbach", "Oezdemir", "Spahn"],
+  transformers_model_name="bert-base-german-cased"
 )
 
 sagemaker_endpoint = dict(
