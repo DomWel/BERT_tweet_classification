@@ -1,11 +1,15 @@
 import pandas as pd
 import tensorflow as tf
 from pathlib import Path
+import json
 
 import config
 from model import getBERTModel
 from data import BertSemanticDataGenerator
 import keras
+
+# Check if results path exists, else create
+Path(config.dirs['results_path']).mkdir(parents=True, exist_ok=True)
 
 # Load CSV data using panda
 train_df = pd.read_csv(config.dirs["training_csv_file"])
@@ -64,13 +68,18 @@ model.compile(
     loss=config.training_params['loss'],
     metrics=config.training_params['metrics']
 )
-model.fit(
+
+hist1 = model.fit(
     train_data,
     validation_data=valid_data,
-    epochs=config.training_params['epochs'],
+    epochs=config.training_params['epochs_1'],
     use_multiprocessing=config.training_params['multiprocessing'],
     workers=-1,
 )
+
+json.dump(hist1.history, open(config.dirs['results_path'] + '/training_phase1_hist', 'w'))
+
+
 
 # Step 2: Training with BERT variables unfreezed
 model.get_layer('bert').trainable = True
@@ -79,17 +88,18 @@ model.compile(
     loss=config.training_params['loss'],
     metrics=config.training_params['metrics']
 )
-model.fit(
+hist2 = model.fit(
     train_data,
     validation_data=valid_data,
-    epochs=config.training_params['epochs'],
+    epochs=config.training_params['epochs_2'],
     use_multiprocessing=config.training_params['multiprocessing'],
     workers=-1,
 )
 
+json.dump(hist2.history, open(config.dirs['results_path'] + '/training_phase2_hist', 'w'))
+
 # Save model in protobuff format
 print("Saving BERT model to "+ config.dirs['results_path']+"/model")
-Path(config.dirs['results_path']).mkdir(parents=True, exist_ok=True)
 model.save(config.dirs['results_path']+"/model")
 
 

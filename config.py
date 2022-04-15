@@ -13,16 +13,18 @@ dl_eval_params = dict(
 )
 
 training_params = dict(
-  epochs = 10, # In total: 2x epochs 
+  epochs_1 = 4, # In total: 2x epochs 
+  epochs_2 = 3,
   multiprocessing = True, 
   loss = "categorical_crossentropy",
   optimizer = "adam",
   metrics = ["acc"], 
   transformers_model_name="bert-base-german-cased"
+  #transformers_model_name="bert-base-uncased"
 )
 
 eval_params = dict(
-  loss = "categorical_crossentropy", # or: "binary_crossentropy"
+  loss = "categorical_crossentropy", 
   metrics = ["acc", "sparse_categorical_accuracy"], 
   labels = ["Lauterbach", "Oezdemir", "Spahn"],
   transformers_model_name="bert-base-german-cased"
@@ -39,7 +41,7 @@ sagemaker_endpoint = dict(
 
 
 dirs = dict(
-  results_path = "/content/drive/MyDrive/BERT/tweet_class/results_test",
+  results_path = "/content/drive/MyDrive/BERT/tweet_class/results_4e",
   training_csv_file = "/content/drive/MyDrive/BERT/tweet_class/data_cleaned/twitter_oez_laut_spa_training.csv",
   validation_csv_file = "/content/drive/MyDrive/BERT/tweet_class/data_cleaned/twitter_oez_laut_spa_valid.csv",
   test_csv_file = "/content/drive/MyDrive/BERT/tweet_class/data_cleaned/twitter_oez_laut_spa_test.csv",
